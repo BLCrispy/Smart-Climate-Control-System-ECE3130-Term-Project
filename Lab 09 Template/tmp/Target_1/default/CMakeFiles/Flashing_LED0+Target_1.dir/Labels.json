@@ -1,0 +1,52 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-complete.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-executes.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test.rule"
+		},
+		{
+			"file" : "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"Flashing_LED0+Target_1"
+		],
+		"name" : "Flashing_LED0+Target_1"
+	}
+}

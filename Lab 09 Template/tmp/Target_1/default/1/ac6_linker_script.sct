@@ -1,0 +1,42 @@
+# 1 "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/RTE/Device/STM32L476RGTx/ac6_linker_script.sct.src"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 411 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/RTE/Device/STM32L476RGTx/regions_STM32L476RGTx.h" 1
+# 2 "<built-in>" 2
+# 1 "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/RTE/Device/STM32L476RGTx/ac6_linker_script.sct.src" 2
+# 32 "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/RTE/Device/STM32L476RGTx/ac6_linker_script.sct.src"
+LR_ROM0 0x08000000 0x00100000 {
+
+  ER_ROM0 0x08000000 0x00100000 {
+    *.o (RESET, +First)
+    *(InRoot$$Sections)
+    *(+RO +XO)
+  }
+
+
+
+
+
+
+
+  RW_NOINIT 0x20000000 UNINIT (0x00018000 - 0x00000C00 - 0x00000200 - 0) {
+    *.o(.bss.noinit)
+    *.o(.bss.noinit.*)
+  }
+
+  RW_RAM0 AlignExpr(+0, 8) (0x00018000 - 0x00000C00 - 0x00000200 - 0 - AlignExpr(ImageLength(RW_NOINIT), 8)) {
+    *(+RW +ZI)
+  }
+
+
+  ARM_LIB_HEAP (AlignExpr(+0, 8)) EMPTY 0x00000C00 { ; Reserve empty region for heap
+  }
+
+
+  ARM_LIB_STACK (0x20000000 + 0x00018000 - 0) EMPTY -0x00000200 { ; Reserve empty region for stack
+  }
+# 85 "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/RTE/Device/STM32L476RGTx/ac6_linker_script.sct.src"
+}

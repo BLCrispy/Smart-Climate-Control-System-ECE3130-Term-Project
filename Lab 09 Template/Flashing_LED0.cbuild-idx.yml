@@ -1,0 +1,22 @@
+build-idx:
+  generated-by: csolution version 2.15.1+p3-gf46d68bf
+  target: Target_1
+  csolution: Flashing_LED0.csolution.yml
+  cbuild-run: out/Flashing_LED0+Target_1.cbuild-run.yml
+  tmpdir: tmp/Target_1/default
+  cprojects:
+    - cproject: Flashing_LED0.cproject.yml
+  cbuilds:
+    - cbuild: out/Flashing_LED0/Target_1/Flashing_LED0+Target_1.cbuild.yml
+      project: Flashing_LED0
+      configuration: +Target_1
+      clayers:
+        - clayer: STM32CubeMX/Target_1/Flashing_LED0.cgen.yml
+      messages:
+        info:
+          - Flashing_LED0.cbuild-pack.yml - file is already up-to-date
+          - Flashing_LED0+Target_1.cbuild-run.yml - file generated successfully
+          - Flashing_LED0+Target_1.cbuild.yml - file is already up-to-date
+      packs-unused:
+        - pack: ARM::CMSIS-DSP@1.18.0
+        - pack: ARM::CMSIS-NN@4.1.0

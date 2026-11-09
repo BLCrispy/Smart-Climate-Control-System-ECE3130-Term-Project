@@ -1,0 +1,11 @@
+# Target labels
+ Flashing_LED0+Target_1
+# Source files and their labels
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-database
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-database.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download.rule
+/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir.rule
