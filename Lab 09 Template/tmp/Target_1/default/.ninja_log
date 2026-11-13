@@ -1,49 +1,43 @@
 # ninja log v7
-0	6	1794262776969965138	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	1e4f5b74d5d820ca
-0	6	1794262776969965138	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	1e4f5b74d5d820ca
-6	9	1794262776973965228	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	a1005066ae2ffad7
-6	9	1794262776973965228	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	a1005066ae2ffad7
-9	12	1794262776976965297	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	681220c62c7d5c9b
-9	12	1794262776976965297	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	681220c62c7d5c9b
-12	16	1794262776980965387	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	ba31d3e4ba915
-12	16	1794262776980965387	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	ba31d3e4ba915
-16	6684	1794262783649116510	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	98cc938f5528e52a
-16	6684	1794262783649116510	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	98cc938f5528e52a
-116	123	1794265391652911899	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298
-116	123	1794265391652911899	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298
-0	116	1794265391536909002	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.bin	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.hex	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_commands.json	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_c.h	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_cxx.h	a9bf2f0ba35ebc31
-0	116	1794265391536909002	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	a9bf2f0ba35ebc31
-364	367	1794263006592055495	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-executes	b42bfba3bae4cd8
-364	367	1794263006592055495	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-executes	b42bfba3bae4cd8
-123	126	1794265391659912074	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	4704aa090a44a6c6
-123	126	1794265391659912074	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	4704aa090a44a6c6
-126	129	1794265391665912223	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	3c0b1f976b3f453c
-126	129	1794265391665912223	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	3c0b1f976b3f453c
-129	134	1794265391670912348	CMakeFiles/Flashing_LED0+Target_1-complete	31bbce2c3a28a100
-129	134	1794265391670912348	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	31bbce2c3a28a100
-129	134	1794265391670912348	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-complete	31bbce2c3a28a100
-129	134	1794265391670912348	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	31bbce2c3a28a100
-1	104	1794265708566361782	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.bin	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.hex	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_commands.json	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_c.h	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_cxx.h	a9bf2f0ba35ebc31
-1	104	1794265708566361782	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	a9bf2f0ba35ebc31
-104	111	1794265708669459358	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298
-104	111	1794265708669459358	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298
-111	113	1794265708676364300	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	4704aa090a44a6c6
-111	113	1794265708676364300	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	4704aa090a44a6c6
-113	116	1794265708681364415	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	3c0b1f976b3f453c
-113	116	1794265708681364415	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	3c0b1f976b3f453c
-116	121	1794265708686364529	CMakeFiles/Flashing_LED0+Target_1-complete	31bbce2c3a28a100
-116	121	1794265708686364529	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	31bbce2c3a28a100
-116	121	1794265708686364529	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-complete	31bbce2c3a28a100
-116	121	1794265708686364529	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	31bbce2c3a28a100
+0	5	1794429954137825679	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	4f43caaf578a51e5
+0	5	1794429954137825679	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	4f43caaf578a51e5
+5	7	1794429954140825741	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	d6083966bcb9a6ee
+5	7	1794429954140825741	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	d6083966bcb9a6ee
+7	10	1794429954143825803	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	fd7955a49fbca1a7
+7	10	1794429954143825803	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	fd7955a49fbca1a7
+10	14	1794429954147825885	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	d3272374d9f88fd3
+10	14	1794429954147825885	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	d3272374d9f88fd3
+14	2375	1794429956508874482	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	fbb8ac9e0a70e405
+14	2375	1794429956508874482	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	fbb8ac9e0a70e405
+116	124	1794430122376717481	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	8a9c055ac87e44c2
+116	124	1794430122376717481	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	8a9c055ac87e44c2
+1	116	1794430122260286112	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.bin	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.hex	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_commands.json	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_c.h	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_macros_cxx.h	7b152276734c58f0
+1	116	1794430122260286112	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-build	7b152276734c58f0
+108	112	1794430045744711206	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-executes	515163925b210c5
+108	112	1794430045744711206	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-executes	515163925b210c5
+124	126	1794430122383288644	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	48480cd483dc2379
+124	126	1794430122383288644	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-install	48480cd483dc2379
+126	130	1794430122388288747	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	d9602fd6622e178c
+126	130	1794430122388288747	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-test	d9602fd6622e178c
+130	134	1794430122393288850	CMakeFiles/Flashing_LED0+Target_1-complete	264a18cabf6f97c0
+130	134	1794430122393288850	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	264a18cabf6f97c0
+130	134	1794430122393288850	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/CMakeFiles/Flashing_LED0+Target_1-complete	264a18cabf6f97c0
+130	134	1794430122393288850	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-done	264a18cabf6f97c0
+0	5	1794505972517434438	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	1e4f5b74d5d820ca
+0	5	1794505972517434438	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-mkdir	1e4f5b74d5d820ca
+5	9	1794505972521434528	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	a1005066ae2ffad7
+5	9	1794505972521434528	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-download	a1005066ae2ffad7
+9	13	1794505972524434595	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	681220c62c7d5c9b
+9	13	1794505972524434595	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-update	681220c62c7d5c9b
+13	17	1794505972528434685	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	ba31d3e4ba915
+13	17	1794505972528434685	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-patch	ba31d3e4ba915
+17	269	1794505972781440378	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	98cc938f5528e52a
+17	269	1794505972781440378	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure	98cc938f5528e52a
+269	289	1794505972782762487	Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298
+269	289	1794505972782762487	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database	b1338acd9b35b298

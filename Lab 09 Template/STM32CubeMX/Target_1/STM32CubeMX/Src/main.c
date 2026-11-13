@@ -30,6 +30,15 @@ static void MX_GPIO_Init(void);
 
 
 // =============================================================================
+// MACROS
+// =============================================================================
+#define ADC_CH_TEMP   1   // PC0 -> IN1
+#define ADC_CH_LIGHT  2   // PC1 -> IN2
+#define ADC_CH_POT    3   // PC2 -> IN3
+#define VREF_MV 3300U   // assumes the Nucleo's 3.3 V supply is the ADC reference
+
+
+// =============================================================================
 // Function Prototypes
 // =============================================================================
 
@@ -45,6 +54,11 @@ void Write_String_LCD(char *temp);
 void Keypad_Init();
 uint8_t Read_Keypad();
 
+// Buzzer Functions
+static void buzzer_init(uint32_t freq_hz);
+static void buzzer_on(void)  { TIM3->CR1 |=  TIM_CR1_CEN; }
+static void buzzer_off(void) { TIM3->CR1 &= ~TIM_CR1_CEN; }
+
 
 // =============================================================================
 // MAIN FUNCTION
@@ -57,6 +71,12 @@ int main(void)
   MX_GPIO_Init();
   LCD_Init();
   Keypad_Init();
+
+  //buzzer initialization and test
+  buzzer_init(1000);
+  buzzer_on();  HAL_Delay(5000);
+  buzzer_off(); HAL_Delay(5000);
+  
 
   // TODO: Put any other initialization code here
 
@@ -74,7 +94,163 @@ int main(void)
 // Set up the GPIO pins
 static void MX_GPIO_Init(void)
 {
-  // TODO: Initialize any input or output pins you'll use here
+  // **** Pins Already Intialized ****
+  // LCD Pins
+  // PB5, PA10, PA5
+  // ----
+  // Keypad Pins
+  // PB1, PB2, PB3, PB4, PB6, PB7, PB8, PB9
+  // ----
+
+  // Clock GPIOA,GPIOB,GPIOC enabled
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN; 
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;
+
+  // **** LED Initialization ****
+
+  // Set LED pins as outputs, PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
+  GPIOA->MODER &= ~(0x03 << (2*1)); // Clear mode bits for PA1
+  GPIOA->MODER &= ~(0x03 << (2*0)); // Clear mode bits for PA0
+  GPIOC->MODER &= ~(0x03 << (2*7)); // Clear mode bits for PC7
+  GPIOC->MODER &= ~(0x03 << (2*8)); // Clear mode bits for PC8
+
+  GPIOA->MODER |= (0x01 << (2*1)); // Set PA1 as output
+  GPIOA->MODER |= (0x01 << (2*0)); // Set PA0 as output
+  GPIOC->MODER |= (0x01 << (2*7)); // Set PC7 as output
+  GPIOC->MODER |= (0x01 << (2*8)); // Set PC8 as output
+
+  GPIOA->OTYPER &= ~(0x01 << 1); // Set PA1 as push-pull
+  GPIOA->OTYPER &= ~(0x01 << 0); // Set PA0 as push-pull
+  GPIOC->OTYPER &= ~(0x01 << 7); // Set PC7 as push-pull
+  GPIOC->OTYPER &= ~(0x01 << 8); // Set PC8 as push-pull
+
+
+  // **** ADC Initialization ****
+
+  // Enable ADC clock
+  RCC->AHB2ENR |= RCC_AHB2ENR_ADCEN;
+  (void)RCC->AHB2ENR;   // dummy read for clock delay
+
+  // ADC clock = HCLK/1 (synchronous)
+  ADC123_COMMON->CCR = (ADC123_COMMON->CCR & ~ADC_CCR_CKMODE)
+                     | (0x01 << ADC_CCR_CKMODE_Pos);
+
+  // Set ADC pin as analog input, PC0 = Temp_Sensor, PC1 = Light_Sensor, PC2 = Potentiometer
+  GPIOC->MODER |= (0x03 << (2*0)); // Set PC0 as analog input
+  GPIOC->MODER |= (0x03 << (2*1)); // Set PC1 as analog input
+  GPIOC->MODER |= (0x03 << (2*2)); // Set PC2 as analog input
+
+  // Set ADC input pins as no pull
+  GPIOC->PUPDR &= ~(0x03 << (2*0)); // Set PC0 as no pull
+  GPIOC->PUPDR &= ~(0x03 << (2*1)); // Set PC1 as no pull
+  GPIOC->PUPDR &= ~(0x03 << (2*2)); // Set PC2 as no pull
+
+  // Enable analog mode for ADC input pins
+  GPIOC->ASCR  |=  (0x01 << 0);
+  GPIOC->ASCR  |=  (0x01 << 1);
+  GPIOC->ASCR  |=  (0x01 << 2);
+
+  // Wake ADC: exit deep power-down mode, enable regulator, delay 20us to account for ADC startup time
+  ADC1->CR &= ~ADC_CR_DEEPPWD;  // Exit deep power-down mode
+  ADC1->CR |= ADC_CR_ADVREGEN;  // Enable regulator
+  for (volatile uint32_t delay = 0; delay < 20000; delay++); // Wait 20us for ADC startup
+  
+  // Calibrate ADC
+  ADC1->CR &= ~ADC_CR_ADCALDIF;     // Sets single-ended calibration, not differential
+  ADC1->CR |= ADC_CR_ADCAL;         // Starts calibration
+  while (ADC1->CR & ADC_CR_ADCAL);  // Wait for calibration to complete
+
+  // Configure ADC: 12-bit, right-aligned, single conversion
+  ADC1->CFGR &= ~(ADC_CFGR_RES | ADC_CFGR_ALIGN | ADC_CFGR_CONT);
+
+  // Sample time for channel (SMPR1 covers channels 0-9, 3 bits each)
+  // 100 = 47.5 cycles for pot, temp, and light sensor
+  ADC1->SMPR1 &= ~(0x07 << (3*0));
+  ADC1->SMPR1 &= ~(0x07 << (3*1));
+  ADC1->SMPR1 &= ~(0x07 << (3*2));
+  ADC1->SMPR1 |=  (0x04 << (3*0));
+  ADC1->SMPR1 |=  (0x04 << (3*1));
+  ADC1->SMPR1 |=  (0x04 << (3*2));
+
+  // Sequence of 3: temp (IN1), light (IN2), pot (IN3)
+  ADC1->SQR1 = (0x02 << ADC_SQR1_L_Pos)      // L = 2 -> 3 conversions
+             | (0x01 << ADC_SQR1_SQ1_Pos)    // 1st: IN1 (PC0, temp)
+             | (0x02 << ADC_SQR1_SQ2_Pos)    // 2nd: IN2 (PC1, light)
+             | (0x03 << ADC_SQR1_SQ3_Pos);   // 3rd: IN3 (PC2, pot)
+
+  // Enable ADC
+  ADC1->ISR |= ADC_ISR_ADRDY;              // clear flag (write 1)
+  ADC1->CR  |= ADC_CR_ADEN;                // Power on ADC
+  while (!(ADC1->ISR & ADC_ISR_ADRDY)) { } // Wait for ADC to be ready
+}
+
+// =============================================================================
+// ADC Modules Functions
+// =============================================================================
+uint16_t adc_read_channel(uint32_t ch)
+{
+    // Single conversion (L = 0) of the requested channel
+    ADC1->SQR1 = (ch << ADC_SQR1_SQ1_Pos);
+
+    ADC1->CR |= ADC_CR_ADSTART;               // start conversion
+    while (!(ADC1->ISR & ADC_ISR_EOC));       // wait for end of conversion
+
+    return (uint16_t)ADC1->DR;                // reading DR clears EOC
+}
+
+uint32_t read_pot_percent(void) // Read potentiometer in percent (0 to 100%)
+{
+    return (adc_read_channel(ADC_CH_POT) * 100U) / 4095U;
+}
+
+uint32_t read_light_percent(void) // Read light in percent (0 to 100%)
+{
+    return (adc_read_channel(ADC_CH_LIGHT) * 100U) / 4095U;        
+}
+
+int32_t read_temp_c(void) // Read temperature in Celsius
+{
+    uint32_t mv = (adc_read_channel(ADC_CH_TEMP) * VREF_MV) / 4095U;
+    return ((int32_t)mv - 500) / 10;                 // (- 500) accounts for 500mV offset
+}
+
+int32_t read_temp_f(void) // Read temperature in Fahrenheit
+{
+    int32_t mv = ((int32_t)adc_read_channel(ADC_CH_TEMP) * VREF_MV) / 4095;
+    return ((mv - 500) * 9) / 50 + 32;      // (mV - 500)/10 * 9/5 + 32
+}
+
+
+// =============================================================================
+// BUZZER Functions
+// =============================================================================
+
+static void buzzer_init(uint32_t freq_hz)
+{
+    // Clocks: GPIOC and TIM3
+    RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
+
+    // PC9 -> alternate function mode (MODER bits 19:18 = 10)
+    GPIOC->MODER &= ~(3U << (9 * 2));
+    GPIOC->MODER |=  (2U << (9 * 2));
+
+    // AF2 (TIM3_CH4) on PC9: AFR[1], pin 9 -> bits 7:4
+    GPIOC->AFR[1] &= ~(0xFU << ((9 - 8) * 4));
+    GPIOC->AFR[1] |=  (2U   << ((9 - 8) * 4));
+
+    // Timer: 4 MHz / (PSC+1) = 1 MHz tick
+    TIM3->PSC = 3;
+    TIM3->ARR = (1000000U / freq_hz) - 1;
+    TIM3->CCR4 = TIM3->ARR / 2;               // 50% duty
+
+    // CH4: PWM mode 1 (OC4M = 110), preload enable
+    TIM3->CCMR2 &= ~(TIM_CCMR2_OC4M | TIM_CCMR2_CC4S);
+    TIM3->CCMR2 |= (6U << TIM_CCMR2_OC4M_Pos) | TIM_CCMR2_OC4PE;
+
+    TIM3->CCER |= TIM_CCER_CC4E;              // enable output
+    TIM3->CR1  |= TIM_CR1_ARPE;
+    TIM3->EGR  |= TIM_EGR_UG;                 // load registers
 }
 
 
@@ -86,10 +262,7 @@ void LCD_Init()
 	{
 		uint32_t temp;
 		
-        /* enable GPIOA clock */ 
-        RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN; 
-        /* enable GPIOB clock */ 
-        RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+        // GPIOA & GPIOB already enabled
         /*PB5 MOSI, PA10 /CS_7 latch , PA5 shift clock */
 
 			 
@@ -212,11 +385,10 @@ void Write_String_LCD(char *temp) { /* displays a whole string */
 void Keypad_Init()
 	{
 	uint32_t temp;
-	/* enable GPIOB clock */ 
-	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN; 
+  // GPIOB already enabled
 
 	/*configure input*/
-	/* row0 to 3 are PB11, PB10, PB9, PB8 */ 
+	/* row0 to 3 are PB8, PB9, PB10, PB11*/
 	temp = GPIOB->MODER;
 	temp &= ~(0x03<<(2*11)); 
 	temp &= ~(0x03<<(2*10)); temp &= ~(0x03<<(2*9)); 
@@ -268,7 +440,7 @@ void Keypad_Init()
 
 uint8_t Read_Keypad() {
 
-  /* All colomns are zeros col0  PA0  - col1  PA9 - col2 PA10   col3  PB4*/
+  /* All colomns are zeros col0  PB1  - col1  PB2 - col2 PB3   col3  PB4*/
 
   uint8_t a;
   /*set all columns high and wait until a putton is pressed*/

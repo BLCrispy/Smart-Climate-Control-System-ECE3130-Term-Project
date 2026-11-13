@@ -9,3 +9,14 @@ events:
     message: |
       The system is: Linux - 7.2.13-200.fc44.x86_64 - x86_64
 ...
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/st/stm32cubeclt_1.22.0/CMake/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:4 (project)"
+    message: |
+      The system is: Linux - 7.2.13-200.fc44.x86_64 - x86_64
+...
