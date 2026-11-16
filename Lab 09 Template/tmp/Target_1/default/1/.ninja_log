@@ -26,3 +26,56 @@
 65	101	1794430122361041944	ac6_linker_script.sct	14e3a121ece63d9b
 65	101	1794430122361041944	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	14e3a121ece63d9b
 1	6	1794505972798440761	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/compile_commands.json	6873972442895d31
+1	2301	1794858240232385092	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+2301	2370	1794858242589323230	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+2301	2370	1794858242589323230	ac6_linker_script.sct	73fc3e74427215e1
+2301	2370	1794858242589323230	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	149	1794864542346910769	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+0	144	1794864742708407279	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+144	188	1794864742886359517	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+144	188	1794864742886359517	ac6_linker_script.sct	73fc3e74427215e1
+144	188	1794864742886359517	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	89	1794864884085592405	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+90	124	1794864884203363345	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+90	124	1794864884203363345	ac6_linker_script.sct	73fc3e74427215e1
+90	124	1794864884203363345	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	94	1794865377522218428	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+94	130	1794865377646586152	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+94	130	1794865377646586152	ac6_linker_script.sct	73fc3e74427215e1
+94	130	1794865377646586152	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	91	1794865503269123542	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+91	141	1794865503400754208	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+91	141	1794865503400754208	ac6_linker_script.sct	73fc3e74427215e1
+91	141	1794865503400754208	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	163	1794866544356114868	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+163	201	1794866544550037386	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+163	201	1794866544550037386	ac6_linker_script.sct	73fc3e74427215e1
+163	201	1794866544550037386	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	172	1794867206933348027	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+172	210	1794867207135257745	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+172	210	1794867207135257745	ac6_linker_script.sct	73fc3e74427215e1
+172	210	1794867207135257745	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	176	1794867942234691001	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+176	215	1794867942442474179	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+176	215	1794867942442474179	ac6_linker_script.sct	73fc3e74427215e1
+176	215	1794867942442474179	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+0	127	1794868042859854498	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+127	166	1794868043019670843	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+127	166	1794868043019670843	ac6_linker_script.sct	73fc3e74427215e1
+127	166	1794868043019670843	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+0	178	1794868433452335803	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+178	215	1794868433660894397	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+178	215	1794868433660894397	ac6_linker_script.sct	73fc3e74427215e1
+178	215	1794868433660894397	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	122	1794868504211877170	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+122	163	1794868504366806994	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+122	163	1794868504366806994	ac6_linker_script.sct	73fc3e74427215e1
+122	163	1794868504366806994	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	128	1794868570500322825	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+128	167	1794868570660027945	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+128	167	1794868570660027945	ac6_linker_script.sct	73fc3e74427215e1
+128	167	1794868570660027945	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	171	1794869969173272443	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+171	206	1794869969373647811	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+171	206	1794869969373647811	ac6_linker_script.sct	73fc3e74427215e1
+171	206	1794869969373647811	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
