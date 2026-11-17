@@ -34,9 +34,9 @@ static void MX_GPIO_Init(void);
 #define ADC_CH_TEMP 1  // PC0 -> IN1 -> LM45 temperature sensor
 #define ADC_CH_LIGHT 2 // PC1 -> IN2 -> Light sensor
 #define ADC_CH_POT 3   // PC2 -> IN3 -> Potentiometer
-#define VREF_MV 3300  // assumes the Nucleo's 3.3 V supply is the ADC reference
+#define VREF_MV 3300   // assumes the Nucleo's 3.3 V supply is the ADC reference
 #define TEMP_OFFSET_MV 0 // LM45 temperature sensor offset in mV
-#define PWM_ARR 400   // 4 MHz / 400 = 10 kHz
+#define PWM_ARR 400      // 4 MHz / 400 = 10 kHz
 
 // PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
 #define LED0_PIN 1
@@ -56,7 +56,9 @@ volatile uint8_t btn2_event = 0;
 // Function Prototypes
 // =============================================================================
 
-// *** NOTE: Function Prototypes sections are organized in same order as functions are implemented below main function to make it easier to find them ***
+// *** NOTE: Function Prototypes sections are organized in same order as
+// functions are implemented below main function to make it easier to find them
+// ***
 
 // LED Functions
 void GPIO_LED_On(uint8_t pin);
@@ -64,11 +66,12 @@ void GPIO_LED_Off(uint8_t pin);
 
 // ADC Functions
 uint16_t ADC_read_channel(uint32_t ch); // Read a single ADC channel (0-18)
-uint32_t Read_pot_percent(void); // Read potentiometer in percent (0 to 100%)
+uint32_t Read_pot_percent(void);   // Read potentiometer in percent (0 to 100%)
 uint32_t Read_light_percent(void); // Read light in percent (0 to 100%)
-int32_t Read_temp_c(void);    // Read temperature in Celsius
-int32_t Read_temp_f(void);    // Read temperature in Fahrenheit
-int32_t Read_temp_f_x10(void); // Read temperature in Fahrenheit, x10 (gives a decimal value, e.g., 723 = 72.3 F)
+int32_t Read_temp_c(void);         // Read temperature in Celsius
+int32_t Read_temp_f(void);         // Read temperature in Fahrenheit
+int32_t Read_temp_f_x10(void); // Read temperature in Fahrenheit, x10 (gives a
+                               // decimal value, e.g., 723 = 72.3 F)
 
 // Fan Functions
 static void Fan_Init(void);
@@ -129,10 +132,130 @@ int main(void) {
   // Variable Initialization
   uint8_t fan_speed_percent = 0; // Fan speed in percent (0 to 100)
 
+  // LED test sequence to indicate the program is running
+  GPIO_LED_On(LED0_PIN); // Turn on LED0 to indicate the program is running
+  HAL_Delay(250);        // Delay for 250 ms
+  GPIO_LED_On(LED1_PIN); // Turn on LED1 to indicate the program is running
+  HAL_Delay(250);        // Delay for 250 ms
+  GPIO_LED_On(LED2_PIN); // Turn on LED2 to indicate the program is running
+  HAL_Delay(250);        // Delay for 250 ms
+  GPIO_LED_On(LED3_PIN); // Turn on LED3 to indicate the program is running
+  HAL_Delay(250);        // Delay for 250 ms
+
+  GPIO_LED_Off(LED0_PIN); // Turn off LED0 to indicate the program is running
+  HAL_Delay(250);         // Delay for 250 ms
+  GPIO_LED_Off(LED1_PIN); // Turn off LED1 to indicate the program is running
+  HAL_Delay(250);         // Delay for 250 ms
+  GPIO_LED_Off(LED2_PIN); // Turn off LED2 to indicate the program is running
+  HAL_Delay(250);         // Delay for 250 ms
+  GPIO_LED_Off(LED3_PIN); // Turn off LED3 to indicate the program is running
+
+  Write_Instr_LCD(0x28);
+  HAL_Delay(1); // 4-bit, 2 lines, 5x8 font
+  Write_Instr_LCD(0x0C);
+  HAL_Delay(1); // display on, cursor off
+  Write_Instr_LCD(0x01);
+  HAL_Delay(2); // clear display
+  Write_Instr_LCD(0x06);
+  HAL_Delay(1); // entry mode: cursor moves right
+
+
+  // LCD AND KEYPAD TESTING CODE
+
+  // Variable declarations
+  char *welcome = "Welcome to Lab 9";
+  uint8_t LCD_on = 1;       // 1 = LCD is on, 0 = LCD is off
+  uint8_t current_line = 0; // 0 = line 1, 1 = line 2
+  uint8_t key = 0;          // Variable to store the key pressed on the keypad
+
+  Write_String_LCD(welcome);
+  key = Read_Keypad(); // Read the key pressed on the keypad
+
+  Write_Instr_LCD(0x01);
+  HAL_Delay(2); // clear display
+
+  Write_Instr_LCD(0x0E); // display on, cursor visible (underline)
+
   while (1) {
     // TODO: Put your main code here. It will run over and over again until the
     // program is stopped
-    UART2_SendString("Hello from the Nucleo!\r\n");
+    key = Read_Keypad(); // Read the key pressed on the keypad
+
+    if (key == 0) {
+      Write_Char_LCD('0');
+    } else if (key == 1) // If key = 1
+    {
+      Write_Char_LCD('1');
+    } else if (key == 2) // If key = 2
+    {
+      Write_Char_LCD('2');
+    } else if (key == 3) // If key = 3
+    {
+      Write_Char_LCD('3');
+    } else if (key == 4) // If key = 4
+    {
+      Write_Char_LCD('4');
+    } else if (key == 5) // If key = 5
+    {
+      Write_Char_LCD('5');
+    } else if (key == 6) // If key = 6
+    {
+      Write_Char_LCD('6');
+    } else if (key == 7) // If key = 7
+    {
+      Write_Char_LCD('7');
+    } else if (key == 8) // If key = 8
+    {
+      Write_Char_LCD('8');
+    } else if (key == 9) // If key = 9
+    {
+      Write_Char_LCD('9');
+    } else if (key == 10) // If key = A
+    {
+      Write_Instr_LCD(0x01);
+      HAL_Delay(2);       // clear display
+    } else if (key == 11) // If key = B
+    {
+      // Toggles between line 1 and line 2 on the LCD
+      current_line = !current_line; // Toggle the current line
+      if (current_line == 0) {
+        Write_Instr_LCD(0x80); /* beginning of line 1 */
+      } else {
+        Write_Instr_LCD(0xC0); /* beginning of line 2 */
+      }
+
+    } else if (key == 12) // If key = C
+    {
+      // Deletes the character at the current cursor position and shifts the
+      // display left
+      Write_Instr_LCD(0x10); // display shifts one step LEFT
+      Write_Char_LCD(' ');   // Write a space to clear the character at the new
+                             // cursor position
+      Write_Instr_LCD(0x10); // display shifts one step LEFT
+    } else if (key == 13)    // If key = D
+    {
+      Write_Instr_LCD(0x14); // display shifts one step RIGHT
+    } else if (key == 14)    // If key = *
+    {
+      LCD_on = !LCD_on; // Toggle the LCD ON/OFF
+      if (LCD_on) {
+        // Refreshs display and ensures LCD turns back on if LCD_on is toggled
+        // back on
+        Write_Instr_LCD(0x0E); // display on, cursor visible (underline)
+        HAL_Delay(1);
+
+      } else {
+        Write_Instr_LCD(0x08); // display OFF (cursor and blink also off)
+      }
+    } else if (key == 15) // If key = #
+    {
+      Write_Instr_LCD(0x10); // display shifts one step LEFT
+    }
+  }
+
+  while (1) {
+    // TODO: Put your main code here. It will run over and over again until the
+    // program is stopped
 
     if (btn1_event) {
       btn1_event = 0;
@@ -147,7 +270,11 @@ int main(void) {
 
     send_sensor_report(); // Send sensor readings over UART
 
-    HAL_Delay(1000); // Delay for 1 second
+    Write_7Seg(1, 4); // Display 4 on the 1st 7-segment display (enable = 2)
+    Write_7Seg(2, 2); // Display 2 on the 2nd 7-segment display (enable = 1)
+    Write_7Seg(3, 0); // Display 0 on the 3rd 7-segment display (enable = 3)
+    Write_7Seg(4, 1); // Display 1 on the 4th 7-segment display (enable = 4)
+    HAL_Delay(1000);  // Delay for 1 second
   }
 }
 
@@ -253,7 +380,8 @@ static void MX_GPIO_Init(void) {
 }
 
 void GPIO_LED_On(uint8_t pin) {
-  // Finds pin chosen and turns that LED on. PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
+  // Finds pin chosen and turns that LED on. PA1 = LED0, PA0 = LED1, PC7 = LED2,
+  // PC8 = LED3
   if (pin == LED0_PIN) {
     GPIOA->ODR |= (1 << LED0_PIN);
   } else if (pin == LED1_PIN) {
@@ -266,7 +394,8 @@ void GPIO_LED_On(uint8_t pin) {
 }
 
 void GPIO_LED_Off(uint8_t pin) {
-  // Finds pin chosen and turns that LED off. PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
+  // Finds pin chosen and turns that LED off. PA1 = LED0, PA0 = LED1, PC7 =
+  // LED2, PC8 = LED3
   if (pin == LED0_PIN) {
     GPIOA->ODR &= ~(1 << LED0_PIN);
   } else if (pin == LED1_PIN) {
@@ -311,12 +440,16 @@ int32_t Read_temp_c(void) // Read temperature in Celsius
 int32_t Read_temp_f(void) // Read temperature in Fahrenheit
 {
   int32_t mv = ((int32_t)ADC_read_channel(ADC_CH_TEMP) * VREF_MV) / 4095;
-  return ((mv - TEMP_OFFSET_MV) * 9) / 50 + 32; // (mV - TEMP_OFFSET_MV)/10 * 9/5 + 32
+  return ((mv - TEMP_OFFSET_MV) * 9) / 50 +
+         32; // (mV - TEMP_OFFSET_MV)/10 * 9/5 + 32
 }
 
-int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives a decimal value, e.g., 723 = 72.3 F)
+int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives a
+                                // decimal value, e.g., 723 = 72.3 F)
   // Convert the raw count to millivolts, rounded to the nearest mV
-  int32_t mv = (int32_t)(((uint32_t)ADC_read_channel(ADC_CH_TEMP) * VREF_MV + 2047) / 4095);
+  int32_t mv =
+      (int32_t)(((uint32_t)ADC_read_channel(ADC_CH_TEMP) * VREF_MV + 2047) /
+                4095);
 
   // Tenths of a degree C: 1 mV per 0.1 C, minus the LM45's 500 mV offset
   int32_t c_x10 = mv - TEMP_OFFSET_MV;
@@ -329,7 +462,8 @@ int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives a 
 // FAN Functions
 // =============================================================================
 
-static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1) for fan speed control
+static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1)
+                             // for fan speed control
   // Enable TIM1 clock
   RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
   (void)RCC->APB2ENR; // dummy read for clock delay
@@ -357,7 +491,8 @@ static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1)
   TIM1->CR1 |= TIM_CR1_CEN; // start the timer
 }
 
-static void Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
+static void
+Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
 {
   if (speed_percent > 100)
     speed_percent = 100;
@@ -593,15 +728,14 @@ void UART2_SendInt(int32_t value) {
 }
 
 // Send a value that is stored x10 as a decimal, e.g. 723 -> "72.3"
-void UART2_SendFixed1(int32_t value_x10)
-{
-    if (value_x10 < 0) {
-        UART2_SendChar('-');
-        value_x10 = -value_x10;
-    }
-    UART2_SendUInt(value_x10 / 10);
-    UART2_SendChar('.');
-    UART2_SendChar('0' + (value_x10 % 10));
+void UART2_SendFixed1(int32_t value_x10) {
+  if (value_x10 < 0) {
+    UART2_SendChar('-');
+    value_x10 = -value_x10;
+  }
+  UART2_SendUInt(value_x10 / 10);
+  UART2_SendChar('.');
+  UART2_SendChar('0' + (value_x10 % 10));
 }
 
 void send_sensor_report(void) {
