@@ -36,7 +36,7 @@ static void MX_GPIO_Init(void);
 #define ADC_CH_POT 3   // PC2 -> IN3 -> Potentiometer
 #define VREF_MV 3300   // assumes the Nucleo's 3.3 V supply is the ADC reference
 #define TEMP_OFFSET_MV 0 // LM45 temperature sensor offset in mV
-#define PWM_ARR 400      // 4 MHz / 400 = 10 kHz
+#define PWM_ARR 160      // 4 MHz / 400 = 10 kHz
 
 // PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
 #define LED0_PIN 1
@@ -159,99 +159,18 @@ int main(void) {
   Write_Instr_LCD(0x06);
   HAL_Delay(1); // entry mode: cursor moves right
 
+  fan_speed_percent = 50;
+  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
 
-  // LCD AND KEYPAD TESTING CODE
+  HAL_Delay(5000);
 
-  // Variable declarations
-  char *welcome = "Welcome to Lab 9";
-  uint8_t LCD_on = 1;       // 1 = LCD is on, 0 = LCD is off
-  uint8_t current_line = 0; // 0 = line 1, 1 = line 2
-  uint8_t key = 0;          // Variable to store the key pressed on the keypad
+  fan_speed_percent = 0;
+  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
 
-  Write_String_LCD(welcome);
-  key = Read_Keypad(); // Read the key pressed on the keypad
+  HAL_Delay(5000);
 
-  Write_Instr_LCD(0x01);
-  HAL_Delay(2); // clear display
-
-  Write_Instr_LCD(0x0E); // display on, cursor visible (underline)
-
-  while (1) {
-    // TODO: Put your main code here. It will run over and over again until the
-    // program is stopped
-    key = Read_Keypad(); // Read the key pressed on the keypad
-
-    if (key == 0) {
-      Write_Char_LCD('0');
-    } else if (key == 1) // If key = 1
-    {
-      Write_Char_LCD('1');
-    } else if (key == 2) // If key = 2
-    {
-      Write_Char_LCD('2');
-    } else if (key == 3) // If key = 3
-    {
-      Write_Char_LCD('3');
-    } else if (key == 4) // If key = 4
-    {
-      Write_Char_LCD('4');
-    } else if (key == 5) // If key = 5
-    {
-      Write_Char_LCD('5');
-    } else if (key == 6) // If key = 6
-    {
-      Write_Char_LCD('6');
-    } else if (key == 7) // If key = 7
-    {
-      Write_Char_LCD('7');
-    } else if (key == 8) // If key = 8
-    {
-      Write_Char_LCD('8');
-    } else if (key == 9) // If key = 9
-    {
-      Write_Char_LCD('9');
-    } else if (key == 10) // If key = A
-    {
-      Write_Instr_LCD(0x01);
-      HAL_Delay(2);       // clear display
-    } else if (key == 11) // If key = B
-    {
-      // Toggles between line 1 and line 2 on the LCD
-      current_line = !current_line; // Toggle the current line
-      if (current_line == 0) {
-        Write_Instr_LCD(0x80); /* beginning of line 1 */
-      } else {
-        Write_Instr_LCD(0xC0); /* beginning of line 2 */
-      }
-
-    } else if (key == 12) // If key = C
-    {
-      // Deletes the character at the current cursor position and shifts the
-      // display left
-      Write_Instr_LCD(0x10); // display shifts one step LEFT
-      Write_Char_LCD(' ');   // Write a space to clear the character at the new
-                             // cursor position
-      Write_Instr_LCD(0x10); // display shifts one step LEFT
-    } else if (key == 13)    // If key = D
-    {
-      Write_Instr_LCD(0x14); // display shifts one step RIGHT
-    } else if (key == 14)    // If key = *
-    {
-      LCD_on = !LCD_on; // Toggle the LCD ON/OFF
-      if (LCD_on) {
-        // Refreshs display and ensures LCD turns back on if LCD_on is toggled
-        // back on
-        Write_Instr_LCD(0x0E); // display on, cursor visible (underline)
-        HAL_Delay(1);
-
-      } else {
-        Write_Instr_LCD(0x08); // display OFF (cursor and blink also off)
-      }
-    } else if (key == 15) // If key = #
-    {
-      Write_Instr_LCD(0x10); // display shifts one step LEFT
-    }
-  }
+  fan_speed_percent = 100;
+  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
 
   while (1) {
     // TODO: Put your main code here. It will run over and over again until the
@@ -491,8 +410,7 @@ static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1)
   TIM1->CR1 |= TIM_CR1_CEN; // start the timer
 }
 
-static void
-Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
+static void Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
 {
   if (speed_percent > 100)
     speed_percent = 100;
