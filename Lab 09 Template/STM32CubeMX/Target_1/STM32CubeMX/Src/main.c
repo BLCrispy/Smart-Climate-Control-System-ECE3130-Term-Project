@@ -46,11 +46,38 @@ static void MX_GPIO_Init(void);
 
 #define BAUD_RATE 115200U
 
+// Define the main modes for the system
+#define MODE_AUTO 0
+#define MODE_MANUAL 1
+#define MODE_OFF 2
+
+// Defines for 7seg display segments
+#define SEG_BLANK 10
+#define SEG_F 11
+
+// Defines for keypad keys
+#define KEY_NONE 0xFF // 0 is a real key, so "no key" can't be 0
+#define KEY_A 10
+#define KEY_B 11
+#define KEY_C 12
+#define KEY_D 13
+#define KEY_STAR '*'
+#define KEY_HASH '#'
+
 // =============================================================================
 // GLOBAL VARIABLES (for interrupts)
 // =============================================================================
-volatile uint8_t btn1_event = 0;
-volatile uint8_t btn2_event = 0;
+volatile uint8_t mute = 0;
+volatile uint8_t mode = MODE_AUTO; // Default mode is auto
+
+volatile uint8_t seg_digits[4] = {SEG_BLANK, SEG_BLANK, 0, 0};
+volatile uint8_t seg_dp = 0; // bit i set = DP on for digit i
+
+// keypad mapping: columns are outputs, rows are inputs
+static const uint8_t keymap[4][4] = {{'1', '2', '3', 'A'},
+                                     {'4', '5', '6', 'B'},
+                                     {'7', '8', '9', 'C'},
+                                     {'*', '0', '#', 'D'}};
 
 // =============================================================================
 // Function Prototypes
@@ -63,13 +90,12 @@ volatile uint8_t btn2_event = 0;
 // LED Functions
 void GPIO_LED_On(uint8_t pin);
 void GPIO_LED_Off(uint8_t pin);
+void GPIO_LED_Toggle(uint8_t pin);
 
 // ADC Functions
 uint16_t ADC_read_channel(uint32_t ch); // Read a single ADC channel (0-18)
 uint32_t Read_pot_percent(void);   // Read potentiometer in percent (0 to 100%)
 uint32_t Read_light_percent(void); // Read light in percent (0 to 100%)
-int32_t Read_temp_c(void);         // Read temperature in Celsius
-int32_t Read_temp_f(void);         // Read temperature in Fahrenheit
 int32_t Read_temp_f_x10(void); // Read temperature in Fahrenheit, x10 (gives a
                                // decimal value, e.g., 723 = 72.3 F)
 
@@ -89,7 +115,11 @@ void EXTI15_10_IRQHandler(void);
 // 7-segment Display Functions
 void Seg7_Init(void);
 void Write_SR_7S(uint8_t enable, uint8_t digit);
-void Write_7Seg(uint8_t enable, uint8_t digit);
+void Write_7Seg(uint8_t enable, uint8_t digit, uint8_t decimal);
+void Seg7_SetTempF1(int32_t t_x10); // Show a temperature in tenths of a degree
+                                    // F as e.g. "72.3F" on 7seg display
+static void
+Seg7_Refresh(void); // Refresh the 7-segment display (one digit per call)
 
 // UART Functions
 void UART2_Init(void);
@@ -109,13 +139,14 @@ void Write_String_LCD(char *temp);
 
 // Keypad Functions
 void Keypad_Init();
-uint8_t Read_Keypad();
+uint8_t Keypad_Scan(void);
 
 // =============================================================================
 // MAIN FUNCTION
 // =============================================================================
 // The main function, and the entry point of the program
 int main(void) {
+  // Initialize all necessary peripherals and modules
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
@@ -125,30 +156,38 @@ int main(void) {
   PushButtons_Init();
   Seg7_Init();
   UART2_Init();
-
-  // buzzer initialization and test
   Buzzer_Init(1000);
 
   // Variable Initialization
-  uint8_t fan_speed_percent = 0; // Fan speed in percent (0 to 100)
+  uint32_t fan_speed_percent = 0; // Fan speed in percent (0 to 100)
+  uint32_t light_percent = 0;     // Light level in percent (0 to 100)
+  uint32_t pot_percent = 0;       // Potentiometer level in percent (0 to 100)
+  int32_t temp_f_x10 = 0; // Temperature in Fahrenheit, x10 (e.g., 723 = 72.3 F)
 
-  // LED test sequence to indicate the program is running
-  GPIO_LED_On(LED0_PIN); // Turn on LED0 to indicate the program is running
-  HAL_Delay(250);        // Delay for 250 ms
-  GPIO_LED_On(LED1_PIN); // Turn on LED1 to indicate the program is running
-  HAL_Delay(250);        // Delay for 250 ms
-  GPIO_LED_On(LED2_PIN); // Turn on LED2 to indicate the program is running
-  HAL_Delay(250);        // Delay for 250 ms
-  GPIO_LED_On(LED3_PIN); // Turn on LED3 to indicate the program is running
-  HAL_Delay(250);        // Delay for 250 ms
+  // Variables to keep track of the last values read from sensors and displayed
+  uint32_t last_seg = 0;
+  uint32_t last_sensor = 0;
+  uint32_t last_report = 0;
 
-  GPIO_LED_Off(LED0_PIN); // Turn off LED0 to indicate the program is running
-  HAL_Delay(250);         // Delay for 250 ms
-  GPIO_LED_Off(LED1_PIN); // Turn off LED1 to indicate the program is running
-  HAL_Delay(250);         // Delay for 250 ms
-  GPIO_LED_Off(LED2_PIN); // Turn off LED2 to indicate the program is running
-  HAL_Delay(250);         // Delay for 250 ms
-  GPIO_LED_Off(LED3_PIN); // Turn off LED3 to indicate the program is running
+  uint8_t new_temp_setpoint_count =
+      0; // Flag to indicate if a new temperature setpoint has being entered
+  uint8_t new_temp_setpoint[2] = {
+      0}; // Array to store the new temperature setpoint digits
+  uint8_t temp_setpoint =
+      75; // Variable to store the current temperature setpoint
+  uint8_t entering_setpoint = 0; // 1 while a new setpoint is being typed
+  uint8_t buzzer_muted = 0;
+
+  int32_t delta_x10 = 0; // Variable to store the difference between the current
+                         // temperature and the setpoint in tenths of a degree F
+  uint8_t overtemp_flag = 0; // Flag to indicate if the temperature is above 10
+                             // degrees F of the setpoint
+  // LCD variables
+  uint8_t lcd_mode = 0xFF;
+  uint8_t lcd_set = 0xFF;
+  uint8_t lcd_over = 0xFF; // 0xFF forces the first draw
+  int32_t lcd_temp = 0xFF;
+  uint8_t lcd_fan = 0xFF;
 
   Write_Instr_LCD(0x28);
   HAL_Delay(1); // 4-bit, 2 lines, 5x8 font
@@ -159,41 +198,202 @@ int main(void) {
   Write_Instr_LCD(0x06);
   HAL_Delay(1); // entry mode: cursor moves right
 
-  fan_speed_percent = 50;
-  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
-
-  HAL_Delay(5000);
-
-  fan_speed_percent = 0;
-  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
-
-  HAL_Delay(5000);
-
-  fan_speed_percent = 100;
-  Fan_set_speed(fan_speed_percent); // Set initial fan speed to 0%
-
+  // Main Program Loop
   while (1) {
     // TODO: Put your main code here. It will run over and over again until the
     // program is stopped
+    uint32_t now = HAL_GetTick();
 
-    if (btn1_event) {
-      btn1_event = 0;
-      UART2_SendString("Button 1 Pressed!\r\n");
-      // PC13 action here
+    // Keep the 7seg display alive & scan keypad: one digit every 2 ms
+    if ((now - last_seg) >= 2) {
+      last_seg = now;
+      Seg7_Refresh();
+
+      uint8_t key = Keypad_Scan();
+      if (key != KEY_NONE) {
+        if (key == KEY_STAR) { // start (or restart) entry
+          Write_Instr_LCD(0xC0);
+          Write_String_LCD("                ");
+          Write_Instr_LCD(0xC0);
+          Write_String_LCD("New Set: ");
+          entering_setpoint = 1;
+          new_temp_setpoint_count = 0;
+        } else if (entering_setpoint && key >= '0' && key <= '9') {
+          if (new_temp_setpoint_count < 2) { // ignore a 3rd digit
+            Write_Char_LCD(key);
+            new_temp_setpoint[new_temp_setpoint_count++] = key - '0';
+          }
+        } else if (entering_setpoint && key == KEY_HASH) {
+          if (new_temp_setpoint_count == 2) { // need both digits to save
+            temp_setpoint = new_temp_setpoint[0] * 10 + new_temp_setpoint[1];
+          }
+          entering_setpoint = 0; // done (or cancelled if incomplete)
+          new_temp_setpoint_count = 0;
+          Write_Instr_LCD(0xC0); // wipe the bottom row
+          Write_String_LCD("                ");
+          Write_Instr_LCD(0xC0); // Put back at front of row
+        }
+      }
     }
-    if (btn2_event) {
-      btn2_event = 0;
-      UART2_SendString("Button 2 Pressed!\r\n");
-      // PC12 action here
+
+    // Read sensors every 100 ms and update the 7-segment display with the
+    // current temperature in Fahrenheit
+    if ((now - last_sensor) >= 100) { // Read sensors every 100 ms
+      last_sensor = now;
+
+      // Read the potentiometer and light sensor values in percent
+      light_percent = Read_light_percent();
+      pot_percent = Read_pot_percent();
+
+      // Update the 7-segment display with the current temperature in
+      // Fahrenheit
+      temp_f_x10 = Read_temp_f_x10();
+      Seg7_SetTempF1(temp_f_x10);
     }
 
-    send_sensor_report(); // Send sensor readings over UART
+    // Send a sensor report over UART every 1 second
+    if ((now - last_report) >= 1000) { // Send sensor report every 1 second
+      last_report = now;
+      send_sensor_report();
+      GPIO_LED_Toggle(LED3_PIN); // Toggle LED3 to indicate system heartbeat
+    }
 
-    Write_7Seg(1, 4); // Display 4 on the 1st 7-segment display (enable = 2)
-    Write_7Seg(2, 2); // Display 2 on the 2nd 7-segment display (enable = 1)
-    Write_7Seg(3, 0); // Display 0 on the 3rd 7-segment display (enable = 3)
-    Write_7Seg(4, 1); // Display 1 on the 4th 7-segment display (enable = 4)
-    HAL_Delay(1000);  // Delay for 1 second
+    // If the mute flag is set, turn off the buzzer
+    if (mute) {
+      mute = 0;
+      buzzer_muted = 1;
+    }
+    if (!overtemp_flag)
+      buzzer_muted = 0; // re-arm once temperature recovers
+
+    // Check the current mode and perform actions based on the mode
+    switch (mode) {
+    case MODE_AUTO:
+      // Mode Auto functionality
+
+      // For temp_f_x10 in tenths of a degree, and temp_setpoint in whole
+      // degrees:
+      delta_x10 = temp_f_x10 - (temp_setpoint * 10);
+
+      if (delta_x10 <= 0) {
+        fan_speed_percent = 0; // Turn fan off at or below setpoint
+        overtemp_flag = 0;     // Clear the overtemp flag when temperature is at
+                               // or below setpoint
+      } else if (delta_x10 >= 100) { // If the temperature is 10°F or more above
+                                     // the setpoint, set fan speed to 100%
+        fan_speed_percent =
+            100; // Cap at 100% when 10°F (100 tenths) or more above setpoint
+
+        overtemp_flag = 1; // Set the overtemp flag to indicate that the
+                           // temperature is above 10°F of the setpoint
+      } else {
+        fan_speed_percent = 50 + (delta_x10 * 50) / 100;
+        overtemp_flag = 0; // Clear the overtemp flag when temperature is
+                           // below 10°F of the setpoint
+      }
+      break;
+    case MODE_MANUAL:
+      // Mode Manual functionality
+
+      // Set the fan speed based on the potentiometer value
+      fan_speed_percent = pot_percent; // Set fan speed to potentiometer value
+
+      delta_x10 = temp_f_x10 - (temp_setpoint * 10);
+
+      if (delta_x10 >= 100) { // If the temperature is 10°F or more above the
+                              // setpoint, turn on the buzzer
+        overtemp_flag = 1;    // Set the overtemp flag to indicate that the
+                              // temperature is above 10°F of the setpoint
+      } else {
+        overtemp_flag = 0; // Clear the overtemp flag when temperature is
+                           // below 10°F of the setpoint
+      }
+      break;
+    case MODE_OFF:
+      // Mode Off functionality
+      fan_speed_percent = 0;
+      overtemp_flag = 0; // Clear the overtemp flag when the system is off
+      break;
+    }
+
+    // Set fan LED if fan is on (fan speed > 0%)
+    if (fan_speed_percent > 0) {
+      GPIO_LED_On(LED2_PIN); // Turn on LED2 to indicate fan is on
+    } else {
+      GPIO_LED_Off(LED2_PIN);
+    }
+
+    // If the light level is 0%, set the fan speed to 40%
+    if ((light_percent == 0) && (fan_speed_percent > 40)) {
+      fan_speed_percent = 40; // Set fan speed to 40% if light level is 0%
+      GPIO_LED_On(LED0_PIN);  // Turn on LED0 to indicate light level is 0%
+    } else {
+      GPIO_LED_Off(LED0_PIN); // Turn off LED0 if light level is not 0%
+    }
+
+    Fan_set_speed(fan_speed_percent); // Set fan speed
+
+    // Determines LCD display and alarm function based on overtemp_flag status
+    // (if temperature is above 10°F of the setpoint)
+    if (overtemp_flag) {
+      if (buzzer_muted)
+        Buzzer_off();
+      else
+        Buzzer_on();
+      GPIO_LED_On(LED1_PIN);
+    } else {
+      Buzzer_off();
+      GPIO_LED_Off(LED1_PIN);
+    }
+
+    // Top row: redraw only when something it shows has changed
+    uint8_t m = mode;
+    if (m != lcd_mode || temp_setpoint != lcd_set ||
+        overtemp_flag != lcd_over) {
+      lcd_mode = m;
+      lcd_set = temp_setpoint;
+      lcd_over = overtemp_flag;
+
+      Write_Instr_LCD(0x80);
+      if (overtemp_flag) {
+        Write_String_LCD("!! OVER TEMP !! ");
+      } else {
+        if (m == MODE_AUTO)
+          Write_String_LCD("AUTO  SET:");
+        else if (m == MODE_MANUAL)
+          Write_String_LCD("MAN   SET:");
+        else
+          Write_String_LCD("OFF   SET:");
+        Write_Char_LCD('0' + temp_setpoint / 10);
+        Write_Char_LCD('0' + temp_setpoint % 10);
+        Write_String_LCD(
+            "F   "); // spaces cover leftovers from the warning text
+      }
+    }
+
+    // Bottom row: current temp and fan speed (skipped while typing a setpoint)
+    if (!entering_setpoint &&
+        (temp_f_x10 != lcd_temp || fan_speed_percent != lcd_fan)) {
+      lcd_temp = temp_f_x10;
+      lcd_fan  = fan_speed_percent;
+
+      int32_t t = temp_f_x10;
+      if (t < 0)   t = 0;              // same limits as the 7-seg
+      if (t > 999) t = 999;
+
+      Write_Instr_LCD(0xC0);           // bottom row, column 0
+      Write_String_LCD("T:");
+      Write_Char_LCD(t >= 100 ? '0' + (t / 100) % 10 : ' ');   // tens digit, blank if under 10
+      Write_Char_LCD('0' + (t / 10) % 10);                     // ones digit
+      Write_Char_LCD('.');
+      Write_Char_LCD('0' + (t % 10));                          // tenths digit
+      Write_String_LCD("F FAN:");
+
+      Write_Char_LCD(fan_speed_percent >= 100 ? '1' : ' ');            // hundreds
+      Write_Char_LCD(fan_speed_percent >= 10 ? '0' + (fan_speed_percent / 10) % 10 : ' ');
+      Write_Char_LCD('0' + fan_speed_percent % 10);                    // ones
+      Write_Char_LCD('%');
+    }
   }
 }
 
@@ -299,8 +499,8 @@ static void MX_GPIO_Init(void) {
 }
 
 void GPIO_LED_On(uint8_t pin) {
-  // Finds pin chosen and turns that LED on. PA1 = LED0, PA0 = LED1, PC7 = LED2,
-  // PC8 = LED3
+  // Finds pin chosen and turns that LED on. PA1 = LED0, PA0 = LED1, PC7 =
+  // LED2, PC8 = LED3
   if (pin == LED0_PIN) {
     GPIOA->ODR |= (1 << LED0_PIN);
   } else if (pin == LED1_PIN) {
@@ -323,6 +523,20 @@ void GPIO_LED_Off(uint8_t pin) {
     GPIOC->ODR &= ~(1 << LED2_PIN);
   } else if (pin == LED3_PIN) {
     GPIOC->ODR &= ~(1 << LED3_PIN);
+  }
+}
+
+void GPIO_LED_Toggle(uint8_t pin) {
+  // Finds pin chosen and toggles that LED. PA1 = LED0, PA0 = LED1, PC7 =
+  // LED2, PC8 = LED3
+  if (pin == LED0_PIN) {
+    GPIOA->ODR ^= (1 << LED0_PIN);
+  } else if (pin == LED1_PIN) {
+    GPIOA->ODR ^= (1 << LED1_PIN);
+  } else if (pin == LED2_PIN) {
+    GPIOC->ODR ^= (1 << LED2_PIN);
+  } else if (pin == LED3_PIN) {
+    GPIOC->ODR ^= (1 << LED3_PIN);
   }
 }
 
@@ -350,21 +564,8 @@ uint32_t Read_light_percent(void) // Read light in percent (0 to 100%)
   return (ADC_read_channel(ADC_CH_LIGHT) * 100) / 4095;
 }
 
-int32_t Read_temp_c(void) // Read temperature in Celsius
-{
-  uint32_t mv = (ADC_read_channel(ADC_CH_TEMP) * VREF_MV) / 4095;
-  return ((int32_t)mv - TEMP_OFFSET_MV) / 10;
-}
-
-int32_t Read_temp_f(void) // Read temperature in Fahrenheit
-{
-  int32_t mv = ((int32_t)ADC_read_channel(ADC_CH_TEMP) * VREF_MV) / 4095;
-  return ((mv - TEMP_OFFSET_MV) * 9) / 50 +
-         32; // (mV - TEMP_OFFSET_MV)/10 * 9/5 + 32
-}
-
-int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives a
-                                // decimal value, e.g., 723 = 72.3 F)
+int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives
+                                // a decimal value, e.g., 723 = 72.3 F)
   // Convert the raw count to millivolts, rounded to the nearest mV
   int32_t mv =
       (int32_t)(((uint32_t)ADC_read_channel(ADC_CH_TEMP) * VREF_MV + 2047) /
@@ -381,8 +582,8 @@ int32_t Read_temp_f_x10(void) { // Read temperature in Fahrenheit, x10 (gives a
 // FAN Functions
 // =============================================================================
 
-static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1)
-                             // for fan speed control
+static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8
+                             // (TIM1_CH1) for fan speed control
   // Enable TIM1 clock
   RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
   (void)RCC->APB2ENR; // dummy read for clock delay
@@ -410,7 +611,8 @@ static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8 (TIM1_CH1)
   TIM1->CR1 |= TIM_CR1_CEN; // start the timer
 }
 
-static void Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
+static void
+Fan_set_speed(uint8_t speed_percent) // Set fan speed in percent (0 to 100%)
 {
   if (speed_percent > 100)
     speed_percent = 100;
@@ -464,9 +666,6 @@ void PushButtons_Init(void) {
   RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
   (void)RCC->APB2ENR;
 
-  // 1 ms tick for debouncing
-  SysTick_Config(SystemCoreClock / 1000);
-
   // PC12 and PC13: input mode (00) with pull-up (01)
   GPIOC->MODER &= ~((3U << (12 * 2)) | (3U << (13 * 2)));
   GPIOC->PUPDR &= ~((3U << (12 * 2)) | (3U << (13 * 2)));
@@ -497,16 +696,22 @@ void EXTI15_10_IRQHandler(void) {
 
   if (EXTI->PR1 & (1U << 13)) {
     EXTI->PR1 = (1U << 13);       // write 1 to clear
-    if ((now - last_pc13) > 20) { // debounce
+    if ((now - last_pc13) > 150) { // debounce
       last_pc13 = now;
-      btn1_event = 1;
+      mute = 1; // Set mute flag when button on PC13 is pressed
     }
   }
   if (EXTI->PR1 & (1U << 12)) {
     EXTI->PR1 = (1U << 12);
-    if ((now - last_pc12) > 20) { // debounce
+    if ((now - last_pc12) > 150) { // debounce
       last_pc12 = now;
-      btn2_event = 1;
+      // Cycle through modes: 0 -> 1 -> 2 -> 0
+      // 0 = MODE_AUTO, 1 = MODE_MANUAL, 2 = MODE_OFF
+      if (mode == MODE_OFF) {
+        mode = MODE_AUTO; // Switch to auto mode
+      } else {
+        mode++; // Cycle through modes
+      }
     }
   }
 }
@@ -538,9 +743,8 @@ void Write_SR_7S(uint8_t enable, uint8_t digit) {
     else
       GPIOB->ODR |= (1 << 5); /* data = 1 */
     GPIOA->ODR &= ~(1 << 5);
-    HAL_Delay(1); /* SCLK low */
     GPIOA->ODR |= (1 << 5);
-    HAL_Delay(1); /* SCLK high — shift! */
+
     mask = mask >> 1;
   }
   /* ... repeat the same loop for the "enable" byte ... */
@@ -563,12 +767,44 @@ void Write_SR_7S(uint8_t enable, uint8_t digit) {
   GPIOC->ODR &= ~(1 << 10);
 }
 
-void Write_7Seg(uint8_t enable, uint8_t digit) {
+void Write_7Seg(uint8_t enable, uint8_t digit, uint8_t decimal) {
   uint8_t Enable[5] = {0x00, 0x08, 0x04, 0x02, 0x01};
   /* one-hot per display */
-  uint8_t Digit[10] = {0xC0, 0xF9, 0xA4, 0xB0, 0x99,
-                       0x92, 0x82, 0xF8, 0x80, 0x90}; /* 0-9 segment codes */
-  Write_SR_7S(Enable[enable], Digit[digit]);
+  static const uint8_t Digit[12] = {
+      0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92,
+      0x82, 0xF8, 0x80, 0x90, 0xFF, 0x8E}; // note: 0xFF = blank, 0x8E = F
+
+  // If at a decimal point, clear bit 7 of the digit code to turn on the
+  // decimal point
+  uint8_t code = Digit[digit];
+  if (decimal)
+    code &= 0x7F; /* clear bit 7 = DP on */
+
+  Write_SR_7S(Enable[enable], code);
+}
+
+// Show a temperature in tenths of a degree F as e.g. "72.3F"
+void Seg7_SetTempF1(int32_t t_x10) {
+  if (t_x10 < 0)
+    t_x10 = 0; // negatives not handled
+  if (t_x10 > 999)
+    t_x10 = 999; // three digits max: 99.9
+  uint16_t v = (uint16_t)t_x10;
+
+  // Set the digits for the 7-segment display
+  seg_digits[0] =
+      (v >= 100) ? (v / 100) : SEG_BLANK; // tens (blank if under 10.0)
+  seg_digits[1] = (v / 10) % 10;          // ones, shown with the point
+  seg_digits[2] = v % 10;                 // tenths
+  seg_digits[3] = SEG_F;
+  seg_dp = (1 << 1); // DP on digit index 1
+}
+
+// Refresh
+static void Seg7_Refresh(void) { // one digit per call
+  static uint8_t pos = 0;
+  Write_7Seg(pos + 1, seg_digits[pos], (seg_dp >> pos) & 1);
+  pos = (pos + 1) & 3;
 }
 
 // =============================================================================
@@ -735,9 +971,7 @@ void Write_SR_LCD(uint8_t temp) {
       GPIOB->ODR |= (1 << 5);
     /* pulse SCLK: low, then high — shifts this bit in */
     GPIOA->ODR &= ~(1 << 5);
-    HAL_Delay(1);
     GPIOA->ODR |= (1 << 5);
-    HAL_Delay(1);
     mask = mask >> 1;
   }
   /* Latch: copy the shifted byte onto the LCD's data pins */
@@ -839,139 +1073,58 @@ void Keypad_Init() {
   GPIOB->PUPDR = temp;
 }
 
-uint8_t Read_Keypad() {
+// Call every ~2 ms. Returns a key once per press, otherwise KEY_NONE.
+uint8_t Keypad_Scan(void) {
+  static uint8_t col = 0;
+  static uint8_t primed = 0;       // first call only drives column 0
+  static uint8_t found = KEY_NONE; // key seen during the current sweep
+  static uint8_t candidate = KEY_NONE;
+  static uint8_t stable = 0;   // consecutive sweeps showing the candidate
+  static uint8_t empty = 0;    // consecutive sweeps with no key
+  static uint8_t reported = 0; // this press was already returned
+  uint8_t result = KEY_NONE;
 
-  /* All colomns are zeros col0  PB1  - col1  PB2 - col2 PB3   col3  PB4*/
-
-  uint8_t a;
-  /*set all columns high and wait until a putton is pressed*/
-  GPIOB->ODR |= (1 << 1);
-  GPIOB->ODR |= (1 << 2);
-  GPIOB->ODR |= (1 << 3);
-  GPIOB->ODR |= (1 << 4);
-
-  while ((GPIOB->IDR & (0x1 << 8)) == 0 && (GPIOB->IDR & (0x1 << 9)) == 0 &&
-         (GPIOB->IDR & (0x1 << 10)) == 0 && (GPIOB->IDR & (0x1 << 11)) == 0) {
-  }
-
-  HAL_Delay(25); /*debouncing*/
-                 /*scanning */
-  while (1) {
-    GPIOB->ODR &= ~(1 << 1);
-    GPIOB->ODR &= ~(1 << 2);
-    GPIOB->ODR &= ~(1 << 3);
-    GPIOB->ODR &= ~(1 << 4);
-
-    /* Scan Col 0 – PB1 = high*/
-    /* check rows */
-
-    GPIOB->ODR |= (1 << 1);
-    HAL_Delay(2);
-
-    /* check rows*/
-
-    if ((GPIOB->IDR & (0x1 << 8)) != 0) {
-      a = 1;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 9)) != 0) {
-      a = 4;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 10)) != 0) {
-      a = 7;
-      break;
+  if (primed) {
+    // Read the rows for the column driven on the previous call
+    uint8_t rows = (GPIOB->IDR >> 8) & 0xF;
+    for (uint8_t r = 0; r < 4; r++) {
+      if ((rows & (1U << r)) && found == KEY_NONE)
+        found = keymap[r][col];
     }
 
-    if ((GPIOB->IDR & (0x1 << 11)) != 0) {
-      a = 14;
-      break;
-    }
-
-    /* Scan Col 1 */
-
-    GPIOB->ODR &= ~(1 << 1);
-    HAL_Delay(2);
-    GPIOB->ODR |= (1 << 2);
-    HAL_Delay(2);
-    if ((GPIOB->IDR & (0x1 << 8)) != 0) {
-      a = 2;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 9)) != 0) {
-      a = 5;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 10)) != 0) {
-      a = 8;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 11)) != 0) {
-      a = 0;
-      break;
-    }
-
-    /* Scan Col 2 */
-    GPIOB->ODR &= ~(1 << 2);
-    HAL_Delay(2);
-    GPIOB->ODR |= (1 << 3);
-    HAL_Delay(2);
-    if ((GPIOB->IDR & (0x1 << 8)) != 0) {
-      a = 3;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 9)) != 0) {
-      a = 6;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 10)) != 0) {
-      a = 9;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 11)) != 0) {
-      a = 15;
-      break;
-    }
-
-    /* Scan Col 3 */
-    GPIOB->ODR &= ~(1 << 3);
-    HAL_Delay(2);
-    GPIOB->ODR |= (1 << 4);
-    HAL_Delay(2);
-
-    if ((GPIOB->IDR & (0x1 << 8)) != 0) {
-      a = 10;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 9)) != 0) {
-      a = 11;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 10)) != 0) {
-      a = 12;
-      break;
-    }
-    if ((GPIOB->IDR & (0x1 << 11)) != 0) {
-      a = 13;
-      break;
+    col++;
+    if (col == 4) { // end of one full sweep: judge it
+      col = 0;
+      if (found != KEY_NONE) {
+        empty = 0;
+        if (found == candidate) {
+          if (stable < 255)
+            stable++;
+        } else {
+          candidate = found;
+          stable = 1;
+        }
+        if (stable >= 3 && !reported) {
+          result = candidate;
+          reported = 1;
+        }
+      } else {
+        if (empty < 255)
+          empty++;
+        if (empty >= 3) { // key fully released
+          reported = 0;
+          candidate = KEY_NONE;
+          stable = 0;
+        }
+      }
+      found = KEY_NONE;
     }
   }
-  /*wait until button is released*/
-  GPIOB->ODR |= (1 << 1);
-  HAL_Delay(2);
-  GPIOB->ODR |= (1 << 2);
-  HAL_Delay(2);
-  GPIOB->ODR |= (1 << 3);
-  HAL_Delay(2);
-  GPIOB->ODR |= (1 << 4);
-  HAL_Delay(2);
+  primed = 1;
 
-  while (!(
-      ((GPIOB->IDR & (0x1 << 8)) == 0) && ((GPIOB->IDR & (0x1 << 9)) == 0) &&
-      ((GPIOB->IDR & (0x1 << 10)) == 0) && ((GPIOB->IDR & (0x1 << 11)) == 0))) {
-  }
-  HAL_Delay(25);
-  return (a);
+  // Drive the next column high and the others low (one atomic write)
+  GPIOB->BSRR = (0x1EU << 16) | (1U << (col + 1));
+  return result;
 }
 
 // Set up the system clock
@@ -1032,8 +1185,8 @@ void Error_Handler(void) {
 void assert_failed(uint8_t *file, uint32_t line) {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line
-     number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file,
-     line) */
+     number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
+     file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

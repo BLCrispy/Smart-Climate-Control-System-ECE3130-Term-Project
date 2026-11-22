@@ -8,7 +8,7 @@
 1	70	1794263006340568950	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/stm32l4xx_it.o	c00efeb00675948e
 2	75	1794263006341705007	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.o	7691fd310d185d9e
 1	76	1794263006340822869	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/system_stm32l4xx.o	66924d710d0c5f42
-1	180	1795036348015878975	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+0	240	1795389786670652553	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
 4	86	1794263006343056605	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.o	482e97e8ffd1983
 1	87	1794263006340692933	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/stm32l4xx_hal_msp.o	bc1152e6cbfad34
 4	88	1794263006343867224	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.o	7515d588b1ac2f36
@@ -22,14 +22,10 @@
 2	129	1794263006341389788	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.o	448bb92ae831b516
 2	139	1794263006341089829	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o	fa5471a5f3737caf
 2	189	1794263006341229541	CMakeFiles/Group_STM32_HAL_Driver.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o	cacd7873826af1b0
-180	217	1795036348225644784	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
-180	217	1795036348225644784	ac6_linker_script.sct	73fc3e74427215e1
-180	217	1795036348225644784	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
-1	125	1795036453964030375	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
-125	166	1795036454121034269	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
-125	166	1795036454121034269	ac6_linker_script.sct	73fc3e74427215e1
-125	166	1795036454121034269	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
-1	123	1795036528214512057	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
-123	164	1795036528371466034	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
-123	164	1795036528371466034	ac6_linker_script.sct	73fc3e74427215e1
-123	164	1795036528371466034	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+240	277	1795389786939519338	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+240	277	1795389786939519338	ac6_linker_script.sct	73fc3e74427215e1
+240	277	1795389786939519338	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
+1	248	1795390738347190323	CMakeFiles/Group_CubeMX.dir/home/brycelander/Documents/Microcomp_Project/Lab_09_Template/STM32CubeMX/Target_1/STM32CubeMX/Src/main.o	89a990db32ce9492
+248	285	1795390738623238999	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/out/Flashing_LED0/Target_1/Flashing_LED0.axf	73fc3e74427215e1
+248	285	1795390738623238999	ac6_linker_script.sct	73fc3e74427215e1
+248	285	1795390738623238999	/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1/ac6_linker_script.sct	73fc3e74427215e1
