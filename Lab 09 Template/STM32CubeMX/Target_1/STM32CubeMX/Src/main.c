@@ -36,7 +36,7 @@ static void MX_GPIO_Init(void);
 #define ADC_CH_POT 3   // PC2 -> IN3 -> Potentiometer
 #define VREF_MV 3300   // assumes the Nucleo's 3.3 V supply is the ADC reference
 #define TEMP_OFFSET_MV 0 // LM45 temperature sensor offset in mV
-#define PWM_ARR 160      // 4 MHz / 400 = 10 kHz
+#define PWM_ARR 160      // 4 MHz / 160 = 25 kHz
 
 // PA1 = LED0, PA0 = LED1, PC7 = LED2, PC8 = LED3
 #define LED0_PIN 1
@@ -324,8 +324,9 @@ int main(void) {
     }
 
     // If the light level is 0%, set the fan speed to 40%
-    if ((light_percent == 0) && (fan_speed_percent > 40)) {
-      fan_speed_percent = 40; // Set fan speed to 40% if light level is 0%
+    if (light_percent == 0) {
+      if (fan_speed_percent > 40)
+        fan_speed_percent = 40; // Set fan speed to 40% if light level is 0%
       GPIO_LED_On(LED0_PIN);  // Turn on LED0 to indicate light level is 0%
     } else {
       GPIO_LED_Off(LED0_PIN); // Turn off LED0 if light level is not 0%
@@ -596,7 +597,7 @@ static void Fan_Init(void) { // Initialize TIM1 for PWM output on PA8
 
   // --- TIM1 time base ---
   TIM1->PSC = 0;       // timer clock = 4 MHz
-  TIM1->ARR = PWM_ARR; // period = 400 ticks = 10 kHz
+  TIM1->ARR = PWM_ARR; // period = 160 ticks = 25 kHz
   TIM1->CCR1 = 0;      // start with fan off
 
   // CH1: PWM mode 1, preload enabled

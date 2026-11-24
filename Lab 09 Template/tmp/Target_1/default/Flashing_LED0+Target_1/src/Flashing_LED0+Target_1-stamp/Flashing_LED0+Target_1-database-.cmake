@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION ${CMAKE_VERSION}) # this file comes with cmake
 
-set(command "/home/brycelander/.vcpkg/artifacts/2139c4c6/tools.kitware.cmake/3.31.12/bin/cmake;--build;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1;--target;database")
+set(command "/opt/st/stm32cubeclt_1.22.0/CMake/bin/cmake;--build;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1;--target;database")
 set(log_merged "")
 set(log_output_on_failure "ON")
 set(stdout_log "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-database-out.log")

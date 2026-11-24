@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION ${CMAKE_VERSION}) # this file comes with cmake
 
-set(command "/home/brycelander/.vcpkg/artifacts/2139c4c6/tools.kitware.cmake/3.31.12/bin/cmake;-G;Ninja;-S;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1;-B;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1;-DSOLUTION_ROOT=/home/brycelander/Documents/Microcomp Project/Lab 09 Template;-DCMSIS_PACK_ROOT=/home/brycelander/.cache/arm/packs;-DCMSIS_COMPILER_ROOT=/home/brycelander/.vscode/extensions/arm.cmsis-csolution-1.72.0-linux-x64/tools/cmsis-toolbox/etc")
+set(command "/opt/st/stm32cubeclt_1.22.0/CMake/bin/cmake;-G;Ninja;-S;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1;-B;/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/1;-DSOLUTION_ROOT=/home/brycelander/Documents/Microcomp Project/Lab 09 Template;-DCMSIS_PACK_ROOT=/home/brycelander/.cache/arm/packs;-DCMSIS_COMPILER_ROOT=/home/brycelander/.vscode/extensions/arm.cmsis-csolution-1.72.0-linux-x64/tools/cmsis-toolbox/etc")
 set(log_merged "")
 set(log_output_on_failure "ON")
 set(stdout_log "/home/brycelander/Documents/Microcomp Project/Lab 09 Template/tmp/Target_1/default/Flashing_LED0+Target_1/src/Flashing_LED0+Target_1-stamp/Flashing_LED0+Target_1-configure-out.log")
